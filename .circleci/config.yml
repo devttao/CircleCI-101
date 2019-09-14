@@ -1,20 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@devttao 
-25
-97151CircleCI-Public/circleci-demo-workflows
- Code Issues 7 Pull requests 1 Actions Projects 0 Wiki Security Insights
-circleci-demo-workflows/.circleci/config.yml
-@zzak zzak Add Parallel Jobs config
-6a186cc on Jun 14, 2017
-50 lines (45 sloc)  1.16 KB
-  
 version: 2.0
 
 jobs:
