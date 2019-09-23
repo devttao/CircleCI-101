@@ -1,49 +1,7 @@
-version: 2.0
-
-jobs:
-  build:
-    docker:
-      - image: circleci/ruby:2.4-node
-    working_directory: ~/CircleCI-101
-    steps:
-      - checkout
-      - run: ls -al
-  test:
-    docker:
-      - image: circleci/ruby:2.4-node
-    working_directory: ~/CircleCI-101
-    steps:
-      - checkout
-      - run: test
-
-
-  deploy:
-    docker:
-      - image: circleci/ruby:2.4-node
-    working_directory: ~/CircleCI-101
-    environment:
-      BRANCH: "master"
-    steps:
-      - checkout
-      - run:
-          command: |
-            sleep 5 # sleep for 5 seconds to wait for dynos
-            echo "deploy if branch on ${BRANCH}"
-
+orbs:
+  hello-build: circleci/hello-build@0.0.9
+version: 2.1
 workflows:
-  version: 2
-  build-and-deploy:
+  Hello Workflow:
     jobs:
-      - build
-      - test:
-          filters:
-            branches:
-              only: develop
-          requires:
-            - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+      - hello-build/hello-build
