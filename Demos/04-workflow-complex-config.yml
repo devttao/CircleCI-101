@@ -6,24 +6,24 @@ jobs:
     steps:
       - checkout
       - run: echo "unit_test"
-      - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory
-           root: my_workspace
+#      - persist_to_workspace:
+#          # Must be an absolute path, or relative path from working_directory
+#           root: my_workspace
   build:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - run: echo "build"
-      - attach_workspace:
-          # Must be absolute path or relative path from working_directory
-          at: my_workspace
+#      - attach_workspace:
+#          # Must be absolute path or relative path from working_directory
+#          at: my_workspace
   archive_jar:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
       - run: |
-          echo "Archive"
+          echo "archive_jar"
   archive_rpm:
     docker:
       - image: circleci/ruby:2.4.1
@@ -73,5 +73,6 @@ workflows:
             - deploy_qa
       - deploy_bts:
           requires:
+            - archive_rpm
             - deploy_qa
             - integration_test
