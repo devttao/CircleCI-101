@@ -31,6 +31,20 @@ jobs:
       - checkout
       - run: |
           echo "archive_rpm"
+  archive_validate:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: |
+          echo "archive_validate"
+  env_setup_bts:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: |
+          echo "env_setup_bts"
   deploy_qa:
     docker:
       - image: circleci/ruby:2.4.1
@@ -46,8 +60,6 @@ jobs:
       - image: circleci/ruby:2.4.1
     steps:
       - run: echo "deploy_bts"
-
-
 
 workflows:
   version: 2
@@ -67,12 +79,18 @@ workflows:
           requires:
             - archive_jar
             - archive_rpm
+      - archive_validate:
+          requires:
+            - archive_jar
+            - archive_rpm
       - integration_test:
           requires:
-            - build
             - deploy_qa
+            - archive_validate
+      - env_setup_bts:
+          requires:
+            - build
       - deploy_bts:
           requires:
-            - archive_rpm
-            - deploy_qa
             - integration_test
+            - env_setup_bts
