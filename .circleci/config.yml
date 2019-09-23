@@ -86,6 +86,7 @@ workflows:
       - integration_test:
           requires:
             - deploy_qa
+            - archive_validate
       - env_setup_bts:
           requires:
             - build
