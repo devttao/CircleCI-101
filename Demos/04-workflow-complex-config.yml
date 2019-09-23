@@ -10,6 +10,8 @@ jobs:
           # Must be an absolute path, or relative path from working_directory
            root: my_workspace
   build:
+    docker:
+      - image: circleci/ruby:2.4.1
     steps:
       - run: echo "build"
       - attach_workspace:
