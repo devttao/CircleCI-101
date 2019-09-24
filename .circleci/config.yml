@@ -1,22 +1,96 @@
 version: 2
 jobs:
-   job-one:
-     docker:
-       - image: circleci/ruby:2.4.1
-     steps:
-       - checkout
-       - run: echo "A first hello"
-       - run: sleep 25
-   job-two:
-     docker:
-       - image: circleci/ruby:2.4.1
-     steps:
-       - checkout
-       - run: echo "A more familiar hi"
-       - run: sleep 15
+  unit_test:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: echo "unit_test"
+#      - persist_to_workspace:
+#          # Must be an absolute path, or relative path from working_directory
+#           root: my_workspace
+  build:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - run: echo "build"
+#      - attach_workspace:
+#          # Must be absolute path or relative path from working_directory
+#          at: my_workspace
+  archive_jar:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: |
+          echo "archive_jar"
+  archive_rpm:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: |
+          echo "archive_rpm"
+  archive_validate:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: |
+          echo "archive_validate"
+  env_setup_bts:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - checkout
+      - run: |
+          echo "env_setup_bts"
+  deploy_qa:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - run: echo "deploy_qa"
+  integration_test:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - run: echo "deploy_qa"
+  deploy_bts:
+    docker:
+      - image: circleci/ruby:2.4.1
+    steps:
+      - run: echo "deploy_bts"
+
 workflows:
-   version: 2
-   one_and_two:
-     jobs:
-       - job-one
-       - job-two
+  version: 2
+  continuous_integration:
+    jobs:
+      - unit_test
+      - build:
+          requires:
+            - unit_test
+      - archive_jar:
+          requires:
+            - build
+      - archive_rpm:
+          requires:
+            - build
+      - deploy_qa:
+          requires:
+            - archive_jar
+            - archive_rpm
+      - archive_validate:
+          requires:
+            - archive_jar
+            - archive_rpm
+      - integration_test:
+          requires:
+            - deploy_qa
+            - archive_validate
+      - env_setup_bts:
+          requires:
+            - build
+      - deploy_bts:
+          requires:
+            - integration_test
+            - env_setup_bts
